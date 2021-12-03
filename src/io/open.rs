@@ -1,5 +1,5 @@
-use super::{open, fd};
-use crate::{SysErr};
+use super::{fd, open};
+use crate::SysErr;
 
 pub struct Open {
     flags: u32,
@@ -30,14 +30,18 @@ impl Open {
 impl core::ops::BitOr for Open {
     type Output = Open;
     fn bitor(self, open: Open) -> Open {
-        Open { flags: self.flags | open.flags }
+        Open {
+            flags: self.flags | open.flags,
+        }
     }
 }
 
 impl core::ops::BitAnd for Open {
     type Output = Open;
     fn bitand(self, open: Open) -> Open {
-        Open { flags: self.flags & open.flags }
+        Open {
+            flags: self.flags & open.flags,
+        }
     }
 }
 
@@ -48,4 +52,3 @@ impl core::ops::Not for Open {
         Open { flags: !self.flags }
     }
 }
-

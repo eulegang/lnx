@@ -1,14 +1,14 @@
 use crate::StrExt;
 
 #[link(name = "c")]
-extern {
+extern "C" {
     static mut errno: i32;
 
     fn strerror(errno: i32) -> *const u8;
 }
 
 pub struct SysErr {
-    err: i32 
+    err: i32,
 }
 
 impl SysErr {
@@ -44,4 +44,3 @@ impl SysErrOptExt for Option<SysErr> {
         }
     }
 }
-

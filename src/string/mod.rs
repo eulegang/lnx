@@ -1,6 +1,5 @@
-
 #[link(name = "c")]
-extern {
+extern "C" {
     fn strlen(cstr: *const u8) -> usize;
 }
 
@@ -16,4 +15,3 @@ impl StrExt for str {
         unsafe { core::intrinsics::transmute(slice) }
     }
 }
-

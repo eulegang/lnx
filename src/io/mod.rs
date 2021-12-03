@@ -4,8 +4,8 @@ mod open;
 
 pub use open::*;
 
-#[link(name = "c")] 
-extern {
+#[link(name = "c")]
+extern "C" {
     fn open(path: *const u8, flags: u32) -> i32;
     fn write(fd: i32, buf: *const u8, len: u64) -> isize;
     fn read(fd: i32, buf: *mut u8, len: u64) -> isize;
@@ -45,7 +45,7 @@ impl fd {
 
     pub fn dup(&self) -> Result<fd, SysErr> {
         let fd = unsafe { dup(self.fd) };
-        
+
         fd { fd }.check()
     }
 
@@ -76,6 +76,8 @@ impl fd {
 
 impl Drop for fd {
     fn drop(&mut self) {
-        unsafe { close(self.fd); }
+        unsafe {
+            close(self.fd);
+        }
     }
 }
