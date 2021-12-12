@@ -10,3 +10,8 @@ pub use err::*;
 pub use io::*;
 pub use mem::*;
 pub(crate) use string::*;
+pub use string::CStr;
+
+pub mod prelude {
+    pub use crate::string::CStr;
+}

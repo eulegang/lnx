@@ -8,12 +8,13 @@ extern "C" {
     fn realloc(ptr: *mut u8, size: usize) -> *mut u8;
 }
 
-pub trait Alloc {
+pub trait Alloc: Clone {
     unsafe fn malloc(&self, size: usize) -> *mut u8;
     unsafe fn realloc(&self, ptr: *mut u8, size: usize) -> *mut u8;
     unsafe fn free(&self, ptr: *mut u8);
 }
 
+#[derive(Clone, Copy)]
 pub struct Sys;
 
 impl Alloc for Sys {
@@ -46,7 +47,7 @@ where
         if ptr.is_null() {
             None
         } else {
-            unsafe { copy(&item, ptr, size_of::<T>()) };
+            unsafe { copy(&item, ptr, 1) };
 
             Some(heaped { ptr, alloc })
         }

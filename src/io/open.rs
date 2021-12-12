@@ -1,5 +1,5 @@
 use super::{fd, open};
-use crate::SysErr;
+use crate::{SysErr, CStr};
 
 pub struct Open {
     flags: u32,
@@ -16,8 +16,8 @@ impl Open {
     pub const NONBLOCK: Open = Open { flags: 0x800 };
     pub const SYNC: Open = Open { flags: 0x101000 };
 
-    pub fn open(&self, path: *const u8) -> Result<fd, SysErr> {
-        let fd = unsafe { open(path, self.flags) };
+    pub fn open(&self, path: &CStr) -> Result<fd, SysErr> {
+        let fd = unsafe { open(path.as_ptr(), self.flags) };
 
         if fd == -1 {
             Err(SysErr::take())
