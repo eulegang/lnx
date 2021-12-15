@@ -50,6 +50,25 @@ pub(crate) fn read(fd: i32, bytes: &mut [u8]) -> i32 {
     ret
 }
 
+pub(crate) fn open(path: *const u8, flags: u32, perms: u32) -> i32 {
+    let ret: i32;
+    
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 2,
+            in("rdi") path,
+            in("rsi") flags,
+            in("rdx") perms,
+
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
 pub(crate) fn write(fd: i32, bytes: &[u8]) -> i32 {
     let ret: i32;
     let len = bytes.len();

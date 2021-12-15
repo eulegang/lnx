@@ -12,11 +12,6 @@ pub use pipe::Pipe;
 
 pub use open::*;
 
-#[link(name = "c")]
-extern "C" {
-    fn open(path: *const u8, flags: u32) -> i32;
-}
-
 pub struct fd {
     fd: i32,
 }

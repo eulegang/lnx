@@ -1,6 +1,7 @@
-use super::{fd, open};
+use super::fd;
 use crate::{SysErr, CStr};
 use crate::konst::*;
+use crate::syscall::open;
 
 pub struct Open {
     flags: u32,
@@ -18,7 +19,11 @@ impl Open {
     pub const SYNC: Open = Open { flags: O_SYNC };
 
     pub fn open(&self, path: &CStr) -> Result<fd, SysErr> {
-        let fd = unsafe { open(path.as_ptr(), self.flags) };
+        self.open_perms(path, 0o777)
+    }
+
+    pub fn open_perms(&self, path: &CStr, perms: u32) -> Result<fd, SysErr> {
+        let fd = open(path.as_ptr(), self.flags, perms);
 
         if fd == -1 {
             Err(SysErr::take())
