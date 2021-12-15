@@ -1,20 +1,21 @@
 use super::{fd, open};
 use crate::{SysErr, CStr};
+use crate::konst::*;
 
 pub struct Open {
     flags: u32,
 }
 
 impl Open {
-    pub const APPEND: Open = Open { flags: 0x400 };
-    pub const TRUNC: Open = Open { flags: 0x200 };
-    pub const ASYNC: Open = Open { flags: 0x2000 };
-    pub const CLOEXEC: Open = Open { flags: 0x80000 };
-    pub const DSYNC: Open = Open { flags: 0x1000 };
-    pub const EXCL: Open = Open { flags: 0x80 };
-    pub const NOFOLLOW: Open = Open { flags: 0x20000 };
-    pub const NONBLOCK: Open = Open { flags: 0x800 };
-    pub const SYNC: Open = Open { flags: 0x101000 };
+    pub const APPEND: Open = Open { flags: O_APPEND };
+    pub const TRUNC: Open = Open { flags: O_TRUNC };
+    pub const ASYNC: Open = Open { flags: O_ASYNC };
+    pub const CLOEXEC: Open = Open { flags: O_CLOEXEC };
+    pub const DSYNC: Open = Open { flags: O_DSYNC };
+    pub const EXCL: Open = Open { flags: O_EXCL };
+    pub const NOFOLLOW: Open = Open { flags: O_NOFOLLOW };
+    pub const NONBLOCK: Open = Open { flags: O_NONBLOCK };
+    pub const SYNC: Open = Open { flags: O_SYNC };
 
     pub fn open(&self, path: &CStr) -> Result<fd, SysErr> {
         let fd = unsafe { open(path.as_ptr(), self.flags) };

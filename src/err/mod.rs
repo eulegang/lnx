@@ -2,25 +2,28 @@ use crate::StrExt;
 
 #[link(name = "c")]
 extern "C" {
-    static mut errno: i32;
+    //static mut errno: i32;
+    
+    #[link_name = "__errno_location"]
+    fn errno_location() -> *mut i32;
 
     fn strerror(errno: i32) -> *const u8;
 }
 
+#[derive(Debug, PartialEq)]
 pub struct SysErr {
     err: i32,
 }
 
 impl SysErr {
     pub fn take() -> SysErr {
-        let err = unsafe { errno };
+        let err = unsafe { *errno_location() };
         SysErr { err }
     }
 
     pub fn check_syscall(res: i32) -> Option<SysErr> {
         if res == -1 {
-            let err = unsafe { errno };
-            Some(SysErr { err })
+            Some(SysErr::take())
         } else {
             None
         }
@@ -44,3 +47,4 @@ impl SysErrOptExt for Option<SysErr> {
         }
     }
 }
+
