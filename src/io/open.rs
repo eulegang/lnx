@@ -1,7 +1,37 @@
-use super::fd;
+use super::{fd, rfd};
 use crate::{SysErr, CStr};
 use crate::konst::*;
 use crate::syscall::open;
+
+pub struct Rd {
+    flags: u32,
+}
+
+impl Default for Rd {
+    fn default() -> Rd {
+        Rd { flags: O_RDONLY }
+    }
+}
+
+impl Rd {
+    pub const ASYNC: Rd = Rd { flags: O_ASYNC };
+    pub const CLOEXEC: Rd = Rd { flags: O_CLOEXEC };
+    pub const NONBLOCK: Rd = Rd { flags: O_NONBLOCK };
+
+    fn new(flags: u32) -> Rd {
+        Rd { flags }
+    }
+
+    pub fn open(&self, path: &CStr) -> Result<rfd, SysErr> {
+        let fd = open(path.as_ptr(), O_RDONLY | self.flags, 0o777);
+
+        if fd == -1 {
+            Err(SysErr::take())
+        } else {
+            Ok(rfd(fd { fd }))
+        }
+    }
+}
 
 pub struct Open {
     flags: u32,
@@ -18,6 +48,10 @@ impl Open {
     pub const NONBLOCK: Open = Open { flags: O_NONBLOCK };
     pub const SYNC: Open = Open { flags: O_SYNC };
 
+    fn new(flags: u32) -> Open {
+        Open { flags }
+    }
+
     pub fn open(&self, path: &CStr) -> Result<fd, SysErr> {
         self.open_perms(path, 0o777)
     }
@@ -33,28 +67,18 @@ impl Open {
     }
 }
 
-impl core::ops::BitOr for Open {
-    type Output = Open;
-    fn bitor(self, open: Open) -> Open {
-        Open {
-            flags: self.flags | open.flags,
-        }
-    }
+flag_impl!(Open);
+flag_impl!(Rd);
+
+
+#[test]
+fn read_manifest() {
+    use crate::prelude::*;
+
+    let mut buf = [0u8; 12];
+    let mut fd = Rd::default().open(&CStr::new("Cargo.toml").unwrap()).unwrap();
+
+    assert_eq!(fd.read(&mut buf), Ok(12));
+    assert_eq!(&buf, b"[package]\nna");
 }
 
-impl core::ops::BitAnd for Open {
-    type Output = Open;
-    fn bitand(self, open: Open) -> Open {
-        Open {
-            flags: self.flags & open.flags,
-        }
-    }
-}
-
-impl core::ops::Not for Open {
-    type Output = Open;
-
-    fn not(self) -> Open {
-        Open { flags: !self.flags }
-    }
-}

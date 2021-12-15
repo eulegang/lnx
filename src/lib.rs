@@ -4,6 +4,33 @@
 #![feature(asm)]
 #![feature(asm_const)]
 
+macro_rules! flag_impl {
+    ($ty: ty) => {
+        impl core::ops::BitOr for $ty {
+            type Output = $ty;
+            fn bitor(self, other: $ty) -> $ty {
+                let flags = self.flags | other.flags;
+                <$ty>::new(flags)
+            }
+        }
+
+        impl core::ops::BitAnd for $ty {
+            type Output = $ty;
+            fn bitand(self, other: $ty) -> $ty {
+                let flags = self.flags & other.flags;
+                <$ty>::new(flags)
+            }
+        }
+
+        impl core::ops::Not for $ty {
+            type Output = $ty;
+            fn not(self) -> $ty {
+                <$ty>::new(!self.flags)
+            }
+        }
+    }
+}
+
 mod err;
 mod io;
 mod mem;
