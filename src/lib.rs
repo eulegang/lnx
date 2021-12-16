@@ -31,8 +31,9 @@ macro_rules! flag_impl {
     }
 }
 
-mod err;
 mod io;
+pub mod fs;
+mod err;
 mod mem;
 pub(crate) mod string;
 

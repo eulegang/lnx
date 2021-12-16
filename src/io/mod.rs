@@ -4,6 +4,7 @@ mod reader;
 mod writer;
 mod close;
 mod dup;
+mod convert;
 
 pub use reader::Reader;
 pub use writer::Writer;
@@ -23,5 +24,9 @@ impl fd {
     pub const STDIN: rfd = rfd(fd { fd: 0 });
     pub const STDOUT: wfd = wfd(fd { fd: 1 });
     pub const STDERR: wfd = wfd(fd { fd: 2 });
+
+    pub(crate) fn new(fd: i32) -> fd {
+        fd { fd }
+    }
 }
 

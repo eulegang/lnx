@@ -122,3 +122,19 @@ pub(crate) fn dup2(from: i32, to: i32) -> i32 {
 
     ret
 }
+
+pub(crate) fn unlink(path: *const u8) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 87,
+            in("rdi") path,
+
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
