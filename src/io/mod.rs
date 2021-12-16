@@ -1,4 +1,3 @@
-mod open;
 mod pipe;
 mod reader;
 mod writer;
@@ -10,8 +9,6 @@ pub use reader::Reader;
 pub use writer::Writer;
 pub use close::Close;
 pub use pipe::Pipe;
-
-pub use open::*;
 
 pub struct fd {
     fd: i32,

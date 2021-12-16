@@ -31,7 +31,7 @@ macro_rules! flag_impl {
     }
 }
 
-mod io;
+pub mod io;
 pub mod fs;
 mod err;
 mod mem;
@@ -41,7 +41,6 @@ pub (crate) mod syscall;
 pub (crate) mod konst;
 
 pub use err::*;
-pub use io::*;
 pub use mem::*;
 pub(crate) use string::*;
 pub use string::CStr;
