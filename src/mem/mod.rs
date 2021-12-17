@@ -3,6 +3,9 @@ use core::ptr::copy;
 
 #[link(name = "c")]
 extern "C" {
+    /// # Safety
+    ///
+    /// Do not use with 0
     fn malloc(size: usize) -> *mut u8;
     fn free(ptr: *mut u8);
     fn realloc(ptr: *mut u8, size: usize) -> *mut u8;

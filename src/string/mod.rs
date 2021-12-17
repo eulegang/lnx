@@ -17,7 +17,7 @@ impl StrExt for str {
         let len = unsafe { strlen(cstr) };
         let slice = unsafe { core::slice::from_raw_parts(cstr, len) };
 
-        unsafe { core::intrinsics::transmute(slice) }
+        unsafe { core::str::from_utf8_unchecked(slice) }
     }
 }
 
@@ -57,7 +57,7 @@ impl CStr {
 impl AsRef<str> for CStr {
     fn as_ref(&self) -> &str {
         let slice = unsafe { core::slice::from_raw_parts(self.ptr, self.len) };
-        unsafe { core::intrinsics::transmute(slice) }
+        unsafe { core::str::from_utf8_unchecked(slice) }
     }
 }
 
