@@ -138,3 +138,60 @@ pub(crate) fn unlink(path: *const u8) -> i32 {
 
     ret
 }
+
+pub(crate) fn exit(code: i32) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 60,
+            in("edi") code,
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+pub(crate) fn getpid() -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 30,
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+pub(crate) fn fork() -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 57,
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+pub(crate) fn vfork() -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 58,
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
