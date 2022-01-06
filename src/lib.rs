@@ -34,6 +34,7 @@ pub mod io;
 pub mod fs;
 pub mod mem;
 pub mod proc;
+pub mod repr;
 mod err;
 pub(crate) mod string;
 
