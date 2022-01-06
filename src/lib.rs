@@ -2,8 +2,6 @@
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
 
-#![feature(asm)]
-#![feature(asm_const)]
 
 macro_rules! flag_impl {
     ($ty: ty) => {

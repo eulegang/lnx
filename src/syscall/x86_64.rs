@@ -1,3 +1,5 @@
+use core::arch::asm;
+
 pub(crate) fn pipe2(fds: &mut [i32; 2], flags: u32) -> i32 {
     let ret: i32;
     unsafe {
