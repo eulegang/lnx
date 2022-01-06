@@ -18,9 +18,17 @@ pub struct rfd(fd);
 pub struct wfd(fd);
 
 impl fd {
-    pub const STDIN: rfd = rfd(fd { fd: 0 });
-    pub const STDOUT: wfd = wfd(fd { fd: 1 });
-    pub const STDERR: wfd = wfd(fd { fd: 2 });
+    pub fn stdin() -> rfd {
+        rfd(fd { fd: 0 })
+    }
+
+    pub fn stdout() -> wfd {
+        wfd(fd { fd: 1 })
+    }
+
+    pub fn stderr() -> wfd {
+        wfd(fd { fd: 2 })
+    }
 
     pub(crate) fn new(fd: i32) -> fd {
         fd { fd }
