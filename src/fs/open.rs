@@ -1,6 +1,5 @@
 use crate::{
     SysErr, 
-    CStr,
     syscall::open,
     io::{fd, rfd, wfd},
     konst::*,
@@ -25,7 +24,7 @@ impl Rd {
         Rd { flags }
     }
 
-    pub fn open(&self, path: &CStr) -> Result<rfd, SysErr> {
+    pub fn open(&self, path: &[u8]) -> Result<rfd, SysErr> {
         let fd = open(path.as_ptr(), O_RDONLY | self.flags, 0o777);
 
         if fd == -1 {
@@ -61,11 +60,11 @@ impl Wr {
         Wr { flags }
     }
 
-    pub fn open(&self, path: &CStr) -> Result<wfd, SysErr> {
+    pub fn open(&self, path: &[u8]) -> Result<wfd, SysErr> {
         self.open_perms(path, 0o777)
     }
 
-    pub fn open_perms(&self, path: &CStr, perms: u32) -> Result<wfd, SysErr> {
+    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<wfd, SysErr> {
         let fd = open(path.as_ptr(), self.flags, perms);
 
         if fd == -1 {
@@ -101,11 +100,11 @@ impl Open {
         Open { flags }
     }
 
-    pub fn open(&self, path: &CStr) -> Result<fd, SysErr> {
+    pub fn open(&self, path: &[u8]) -> Result<fd, SysErr> {
         self.open_perms(path, 0o777)
     }
 
-    pub fn open_perms(&self, path: &CStr, perms: u32) -> Result<fd, SysErr> {
+    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<fd, SysErr> {
         let fd = open(path.as_ptr(), self.flags, perms);
 
         if fd == -1 {
@@ -125,7 +124,7 @@ fn read_manifest() {
     use crate::prelude::*;
 
     let mut buf = [0u8; 12];
-    let mut fd = Rd::default().open(&CStr::new("Cargo.toml").unwrap()).unwrap();
+    let mut fd = Rd::default().open(b"Cargo.toml\0").unwrap();
 
     assert_eq!(fd.read(&mut buf), Ok(12));
     assert_eq!(&buf, b"[package]\nna");
@@ -134,7 +133,7 @@ fn read_manifest() {
 #[test]
 fn write_null() {
     use crate::prelude::*;
-    let mut wr = Wr::default().open(&CStr::new("/dev/null").unwrap()).unwrap();
+    let mut wr = Wr::default().open(b"/dev/null\0").unwrap();
 
     assert_eq!(wr.write(b"hello world").unwrap(), 11);
     assert_eq!(wr.close(), Ok(()));

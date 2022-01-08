@@ -42,25 +42,19 @@ macro_rules! flag_impl {
 
 pub mod io;
 pub mod fs;
-pub mod mem;
 pub mod proc;
 pub mod start;
 pub mod repr;
 mod err;
-pub(crate) mod string;
 
 pub (crate) mod syscall;
 pub (crate) mod konst;
 
 pub use err::SysErr;
-pub use mem::heaped;
-pub(crate) use string::*;
-pub use string::CStr;
 
 pub type Result<T> = core::result::Result<T, SysErr>;
 
 pub mod prelude {
-    pub use crate::string::CStr;
     pub use crate::Result;
 
     pub use crate::io::{Writer, Reader, fd, Close};
