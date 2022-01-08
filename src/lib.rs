@@ -2,6 +2,16 @@
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
 
+#[macro_export]
+macro_rules! setup_main {
+    () => {
+        #[no_mangle]
+        #[naked]
+        unsafe fn _start() {
+            core::arch::asm!("mov rdi, rsp", "call main", options(noreturn));
+        }
+    }
+}
 
 macro_rules! flag_impl {
     ($ty: ty) => {
@@ -34,6 +44,7 @@ pub mod io;
 pub mod fs;
 pub mod mem;
 pub mod proc;
+pub mod start;
 pub mod repr;
 mod err;
 pub(crate) mod string;
