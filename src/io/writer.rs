@@ -17,3 +17,27 @@ impl Writer for wfd {
         self.0.write(buf)
     }
 }
+
+impl core::fmt::Write for fd {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        let buf = s.as_bytes();
+
+        let mut written = 0;
+
+        while written < buf.len() {
+            match self.write(&buf[written..]) {
+                Ok(n) => written += n,
+                Err(Errno::EINTR) => (),
+                Err(_) => return Err(core::fmt::Error),
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl core::fmt::Write for wfd {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        self.0.write_str(s)
+    }
+}

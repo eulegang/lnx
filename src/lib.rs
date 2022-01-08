@@ -44,7 +44,6 @@ pub mod io;
 pub mod fs;
 pub mod proc;
 pub mod start;
-pub mod repr;
 mod err;
 
 pub (crate) mod syscall;
