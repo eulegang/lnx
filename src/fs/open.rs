@@ -120,6 +120,11 @@ fn read_manifest() {
 }
 
 #[test]
+fn missing() {
+    assert_eq!(Rd::default().open(b"/foobar\0"), Err(Errno::ENOENT));
+}
+
+#[test]
 fn write_null() {
     use crate::prelude::*;
     let mut wr = Wr::default().open(b"/dev/null\0").unwrap();

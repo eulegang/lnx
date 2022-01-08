@@ -10,11 +10,14 @@ pub use writer::Writer;
 pub use close::Close;
 pub use pipe::Pipe;
 
+#[derive(Debug, PartialEq)]
 pub struct fd {
     fd: i32,
 }
 
+#[derive(Debug, PartialEq)]
 pub struct rfd(fd);
+#[derive(Debug, PartialEq)]
 pub struct wfd(fd);
 
 impl fd {
