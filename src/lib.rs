@@ -50,9 +50,9 @@ mod err;
 pub (crate) mod syscall;
 pub (crate) mod konst;
 
-pub use err::SysErr;
+pub use err::Errno;
 
-pub type Result<T> = core::result::Result<T, SysErr>;
+pub type Result<T> = core::result::Result<T, Errno>;
 
 pub mod prelude {
     pub use crate::Result;

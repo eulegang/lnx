@@ -1,17 +1,15 @@
-use crate::{SysErr, syscall::pipe2, konst::*, Result};
+use crate::{Errno, syscall::pipe2, konst::*, Result};
 use super::{fd, wfd, rfd};
 
 
 impl fd {
     pub fn pipe() -> Result<(rfd, wfd)> {
         let mut fds = [0i32; 2];
-        let err = pipe2(&mut fds, 0);
+        let status = pipe2(&mut fds, 0);
 
-        if err < 0 {
-            Err(SysErr::take())
-        } else {
-            Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
-        }
+        Errno::new(status)?;
+
+        Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
     }
 }
 
@@ -25,13 +23,10 @@ impl Pipe {
 
     pub fn open(self) -> Result<(rfd, wfd)> {
         let mut fds = [0i32; 2];
-        let err = pipe2(&mut fds, self.flags);
+        let status = pipe2(&mut fds, self.flags);
+        Errno::new(status)?;
 
-        if err < 0 {
-            Err(SysErr::take())
-        } else {
-            Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
-        }
+        Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
     }
 }
 

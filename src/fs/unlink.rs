@@ -1,15 +1,10 @@
 use crate::{
     Result,
-    SysErr,
+    Errno,
     syscall::unlink,
 };
 
 pub fn rm(path: &[u8]) -> Result<()> {
-    let err = unlink(path.as_ptr());
-
-    if err == -1 {
-        Err(SysErr::take())
-    } else {
-        Ok(())
-    }
+    Errno::new(unlink(path.as_ptr()))?;
+    Ok(())
 }

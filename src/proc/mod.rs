@@ -1,6 +1,6 @@
 use crate::{
     Result,
-    SysErr,
+    Errno,
     syscall::{
         exit as sys_exit,
         fork as sys_fork,
@@ -35,28 +35,26 @@ impl Proc {
     }
 
     pub fn fork() -> Result<Fork> {
-        let pid = sys_fork();
-        if pid == -1 {
-            Err(SysErr::take())
-        } else if pid == 0 {
-            Ok(Fork::Child)
-        } else {
-            let pid = pid as u32;
-            let pid = unsafe { NonZeroU32::new_unchecked(pid) };
-            Ok(Fork::Parent(pid { pid }))
+        let pid = Errno::new(sys_fork())?;
+
+        match pid {
+            0 => Ok(Fork::Child),
+            pid => {
+                let pid = unsafe { NonZeroU32::new_unchecked(pid) };
+                Ok(Fork::Parent(pid { pid }))
+            }
         }
     }
 
     pub fn vfork() -> Result<Fork> {
-        let pid = sys_vfork();
-        if pid == -1 {
-            Err(SysErr::take())
-        } else if pid == 0 {
-            Ok(Fork::Child)
-        } else {
-            let pid = pid as u32;
-            let pid = unsafe { NonZeroU32::new_unchecked(pid) };
-            Ok(Fork::Parent(pid { pid }))
+        let pid = Errno::new(sys_vfork())?;
+
+        match pid {
+            0 => Ok(Fork::Child),
+            pid => {
+                let pid = unsafe { NonZeroU32::new_unchecked(pid) };
+                Ok(Fork::Parent(pid { pid }))
+            }
         }
     }
 }

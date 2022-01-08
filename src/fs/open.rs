@@ -1,5 +1,6 @@
 use crate::{
-    SysErr, 
+    Errno, 
+    Result,
     syscall::open,
     io::{fd, rfd, wfd},
     konst::*,
@@ -24,14 +25,10 @@ impl Rd {
         Rd { flags }
     }
 
-    pub fn open(&self, path: &[u8]) -> Result<rfd, SysErr> {
-        let fd = open(path.as_ptr(), O_RDONLY | self.flags, 0o777);
+    pub fn open(&self, path: &[u8]) -> Result<rfd> {
+        let fd = Errno::new(open(path.as_ptr(), O_RDONLY | self.flags, 0o777))? as i32;
 
-        if fd == -1 {
-            Err(SysErr::take())
-        } else {
-            Ok(fd::new(fd).into())
-        }
+        Ok(fd::new(fd).into())
     }
 }
 
@@ -60,18 +57,14 @@ impl Wr {
         Wr { flags }
     }
 
-    pub fn open(&self, path: &[u8]) -> Result<wfd, SysErr> {
+    pub fn open(&self, path: &[u8]) -> Result<wfd> {
         self.open_perms(path, 0o777)
     }
 
-    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<wfd, SysErr> {
-        let fd = open(path.as_ptr(), self.flags, perms);
+    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<wfd> {
+        let fd = Errno::new(open(path.as_ptr(), self.flags, perms))? as i32;
 
-        if fd == -1 {
-            Err(SysErr::take())
-        } else {
-            Ok(fd::new(fd).into())
-        }
+        Ok(fd::new(fd).into())
     }
 }
 
@@ -100,18 +93,14 @@ impl Open {
         Open { flags }
     }
 
-    pub fn open(&self, path: &[u8]) -> Result<fd, SysErr> {
+    pub fn open(&self, path: &[u8]) -> Result<fd> {
         self.open_perms(path, 0o777)
     }
 
-    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<fd, SysErr> {
-        let fd = open(path.as_ptr(), self.flags, perms);
+    pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<fd> {
+        let fd = Errno::new(open(path.as_ptr(), self.flags, perms))? as i32;
 
-        if fd == -1 {
-            Err(SysErr::take())
-        } else {
-            Ok(fd::new(fd))
-        }
+        Ok(fd::new(fd))
     }
 }
 

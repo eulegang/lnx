@@ -1,4 +1,4 @@
-use crate::{SysErr, Result, syscall::read};
+use crate::{Errno, Result, syscall::read};
 use super::{fd, rfd};
 
 pub trait Reader {
@@ -7,13 +7,8 @@ pub trait Reader {
 
 impl Reader for fd {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        let bytes = read(self.fd, buf);
-
-        if bytes == -1 {
-            Err(SysErr::take())
-        } else {
-            Ok(bytes as usize)
-        }
+        let bytes = Errno::new(read(self.fd, buf))?;
+        Ok(bytes as usize)
     }
 }
 

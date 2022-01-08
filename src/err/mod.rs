@@ -1,19 +1,18 @@
+use core::num::NonZeroU32;
+
 #[derive(Debug, PartialEq)]
-pub struct SysErr {
-    err: i32,
+pub struct Errno {
+    err: NonZeroU32,
 }
 
-impl SysErr {
-    pub fn take() -> SysErr {
-        let err = unsafe { todo!() };
-        SysErr { err }
-    }
+impl Errno {
+    pub fn new(result: i32) -> Result<u32, Errno> {
+        if result < 0 {
+            let err = unsafe { NonZeroU32::new_unchecked((-result) as u32) };
 
-    pub fn check_syscall(res: i32) -> Option<SysErr> {
-        if res == -1 {
-            Some(SysErr::take())
+            Err(Errno { err })
         } else {
-            None
+            Ok(result as u32)
         }
     }
 }
