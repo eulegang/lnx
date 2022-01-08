@@ -7,7 +7,7 @@ pub struct Errno {
 }
 
 impl Errno {
-    pub fn new(result: i32) -> Result<u32, Errno> {
+    pub(crate) fn new(result: i32) -> Result<u32, Errno> {
         if result < 0 {
             let err = unsafe { NonZeroU32::new_unchecked((-result) as u32) };
 
