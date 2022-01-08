@@ -1,7 +1,7 @@
 use core::num::NonZeroU32;
 use core::fmt::{self, Display, Formatter};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Errno {
     err: NonZeroU32,
 }
