@@ -48,6 +48,9 @@ pub mod start;
 pub mod mmap;
 mod err;
 
+#[cfg(feature = "inet")]
+pub mod inet;
+
 pub (crate) mod syscall;
 pub (crate) mod konst;
 

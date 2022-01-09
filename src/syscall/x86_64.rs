@@ -227,6 +227,25 @@ pub(crate) fn mmap(
     ret
 }
 
+#[cfg(feature = "inet")]
+pub(crate) fn socket(family: i32, ty: i32, prot: i32) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+            
+            in("rax") 41,
+            in("edi") family,
+            in("esi") ty,
+            in("edx") prot,
+
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
 pub(crate) fn munmap(addr: *const u8, len: usize) -> i32 {
     let ret: i32;
 
@@ -237,6 +256,25 @@ pub(crate) fn munmap(addr: *const u8, len: usize) -> i32 {
             in("rax") 11,
             in("rdi") addr,
             in("rsi") len,
+
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+#[cfg(feature = "inet")]
+pub(crate) fn bind(fd: i32, addr: *const (), len: usize) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+            
+            in("rax") 49,
+            in("edi") fd,
+            in("esi") addr,
+            in("edx") len,
 
             lateout("eax") ret,
         );
@@ -256,6 +294,43 @@ pub(crate) fn lseek(fd: i32, offset: usize, origin: u32) -> isize {
             in("rdi") fd,
             in("rsi") offset,
             in("rdx") origin,
+
+            lateout("rax") ret,
+        );
+    }
+
+    ret
+}
+
+#[cfg(feature = "inet")]
+pub(crate) fn listen(fd: i32, backlog: u32) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+            
+            in("rax") 50,
+            in("edi") fd,
+            in("esi") backlog,
+
+            lateout("rax") ret,
+        );
+    }
+
+    ret
+}
+
+#[cfg(feature = "inet")]
+pub(crate) fn accept(fd: i32, addr: *mut (), len: *mut usize) -> i32 {
+    let ret: i32;
+    unsafe {
+        asm!(
+            "syscall",
+            
+            in("rax") 43,
+            in("rdi") fd,
+            in("rsi") addr,
+            in("rdx") len,
 
             lateout("rax") ret,
         );
