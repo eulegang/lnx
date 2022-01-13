@@ -5,6 +5,7 @@ mod close;
 mod seek;
 mod dup;
 mod convert;
+mod mmap;
 
 pub use reader::Reader;
 pub use writer::Writer;
