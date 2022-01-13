@@ -52,6 +52,7 @@ pub (crate) mod syscall;
 pub (crate) mod konst;
 
 pub use err::Errno;
+pub(crate) use err::ToErrno;
 
 pub type Result<T> = core::result::Result<T, Errno>;
 

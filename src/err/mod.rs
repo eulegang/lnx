@@ -6,6 +6,55 @@ pub struct Errno {
     err: NonZeroU32,
 }
 
+pub(crate) trait ToErrno {
+    type Out;
+
+    fn to_errno(self) -> Result<Self::Out, Errno>;
+}
+
+impl ToErrno for i32 {
+    type Out = u32;
+
+    fn to_errno(self) -> Result<Self::Out, Errno> {
+        if self < 0 {
+            let err = unsafe { NonZeroU32::new_unchecked((-self) as u32) };
+
+            Err(Errno { err })
+        } else {
+            Ok(self as u32)
+        }
+    }
+}
+
+impl ToErrno for i64 {
+    type Out = u64;
+
+    fn to_errno(self) -> Result<Self::Out, Errno> {
+        if self < 0 {
+            let err = unsafe { NonZeroU32::new_unchecked((-self) as u32) };
+
+            Err(Errno { err })
+        } else {
+            Ok(self as u64)
+        }
+    }
+}
+
+impl ToErrno for isize {
+    type Out = usize;
+
+    fn to_errno(self) -> Result<Self::Out, Errno> {
+        if self < 0 {
+            let err = unsafe { NonZeroU32::new_unchecked((-self) as u32) };
+
+            Err(Errno { err })
+        } else {
+            Ok(self as usize)
+        }
+    }
+}
+
+
 impl Errno {
     pub(crate) fn new(result: i32) -> Result<u32, Errno> {
         if result < 0 {

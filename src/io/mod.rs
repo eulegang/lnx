@@ -2,6 +2,7 @@ mod pipe;
 mod reader;
 mod writer;
 mod close;
+mod seek;
 mod dup;
 mod convert;
 
@@ -9,6 +10,7 @@ pub use reader::Reader;
 pub use writer::Writer;
 pub use close::Close;
 pub use pipe::Pipe;
+pub use seek::Seek;
 
 #[derive(Debug, PartialEq)]
 pub struct fd {

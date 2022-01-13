@@ -244,3 +244,22 @@ pub(crate) fn munmap(addr: *const u8, len: usize) -> i32 {
 
     ret
 }
+
+pub(crate) fn lseek(fd: i32, offset: usize, origin: u32) -> isize {
+    let ret: isize;
+
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 8,
+            in("rdi") fd,
+            in("rsi") offset,
+            in("rdx") origin,
+
+            lateout("rax") ret,
+        );
+    }
+
+    ret
+}
