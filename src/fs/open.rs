@@ -1,5 +1,5 @@
 use crate::{
-    Errno, 
+    ToErrno, 
     Result,
     syscall::open,
     io::{fd, rfd, wfd},
@@ -26,7 +26,7 @@ impl Rd {
     }
 
     pub fn open(&self, path: &[u8]) -> Result<rfd> {
-        let fd = Errno::new(open(path.as_ptr(), O_RDONLY | self.flags, 0o777))? as i32;
+        let fd = open(path.as_ptr(), O_RDONLY | self.flags, 0o777).to_errno()? as i32;
 
         Ok(fd::new(fd).into())
     }
@@ -62,7 +62,7 @@ impl Wr {
     }
 
     pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<wfd> {
-        let fd = Errno::new(open(path.as_ptr(), self.flags, perms))? as i32;
+        let fd = open(path.as_ptr(), self.flags, perms).to_errno()? as i32;
 
         Ok(fd::new(fd).into())
     }
@@ -98,7 +98,7 @@ impl Open {
     }
 
     pub fn open_perms(&self, path: &[u8], perms: u32) -> Result<fd> {
-        let fd = Errno::new(open(path.as_ptr(), self.flags, perms))? as i32;
+        let fd = open(path.as_ptr(), self.flags, perms).to_errno()? as i32;
 
         Ok(fd::new(fd))
     }
@@ -121,6 +121,8 @@ fn read_manifest() {
 
 #[test]
 fn missing() {
+    use crate::Errno;
+
     assert_eq!(Rd::default().open(b"/foobar\0"), Err(Errno::ENOENT));
 }
 

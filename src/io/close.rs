@@ -1,4 +1,4 @@
-use crate::{Errno, Result, syscall::close};
+use crate::{ToErrno, Result, syscall::close};
 use super::{fd, wfd, rfd};
 
 pub trait Close {
@@ -10,7 +10,7 @@ impl Close for fd {
         let result = close(self.fd);
         core::mem::forget(self);
 
-        Errno::new(result)?;
+        result.to_errno()?;
 
         Ok(())
     }

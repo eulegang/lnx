@@ -1,4 +1,4 @@
-use crate::{Errno, Result, syscall::{dup, dup2}};
+use crate::{ToErrno, Result, syscall::{dup, dup2}};
 use super::{fd, wfd, rfd};
 
 pub trait Dup: Sized {
@@ -8,13 +8,13 @@ pub trait Dup: Sized {
 
 impl Dup for fd {
     fn dup(&self) -> Result<fd> {
-        let fd = Errno::new(dup(self.fd))? as i32;
+        let fd = dup(self.fd).to_errno()? as i32;
 
         Ok(fd { fd })
     }
 
     fn dup2(&self, target: i32) -> Result<fd> {
-        let fd = Errno::new(dup2(self.fd, target))? as i32;
+        let fd = dup2(self.fd, target).to_errno()? as i32;
 
         Ok(fd { fd })
     }

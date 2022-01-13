@@ -1,6 +1,6 @@
 use crate::{
     Result,
-    Errno,
+    ToErrno,
     syscall::{
         exit as sys_exit,
         fork as sys_fork,
@@ -35,7 +35,7 @@ impl Proc {
     }
 
     pub fn fork() -> Result<Fork> {
-        let pid = Errno::new(sys_fork())?;
+        let pid = sys_fork().to_errno()?;
 
         match pid {
             0 => Ok(Fork::Child),
@@ -47,7 +47,7 @@ impl Proc {
     }
 
     pub fn vfork() -> Result<Fork> {
-        let pid = Errno::new(sys_vfork())?;
+        let pid = sys_vfork().to_errno()?;
 
         match pid {
             0 => Ok(Fork::Child),

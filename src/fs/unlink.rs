@@ -1,10 +1,10 @@
 use crate::{
     Result,
-    Errno,
+    ToErrno,
     syscall::unlink,
 };
 
 pub fn rm(path: &[u8]) -> Result<()> {
-    Errno::new(unlink(path.as_ptr()))?;
+    unlink(path.as_ptr()).to_errno()?;
     Ok(())
 }

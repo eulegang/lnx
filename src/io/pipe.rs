@@ -1,4 +1,4 @@
-use crate::{Errno, syscall::pipe2, konst::*, Result};
+use crate::{ToErrno, syscall::pipe2, konst::*, Result};
 use super::{fd, wfd, rfd};
 
 
@@ -7,7 +7,7 @@ impl fd {
         let mut fds = [0i32; 2];
         let status = pipe2(&mut fds, 0);
 
-        Errno::new(status)?;
+        status.to_errno()?;
 
         Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
     }
@@ -23,8 +23,7 @@ impl Pipe {
 
     pub fn open(self) -> Result<(rfd, wfd)> {
         let mut fds = [0i32; 2];
-        let status = pipe2(&mut fds, self.flags);
-        Errno::new(status)?;
+        pipe2(&mut fds, self.flags).to_errno()?;
 
         Ok((rfd(fd { fd: fds[0] }), wfd(fd { fd: fds[1] })))
     }

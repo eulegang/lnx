@@ -1,6 +1,6 @@
 use crate::io::{fd, Close};
 use crate::syscall::{mmap, munmap};
-use crate::{Errno, Result};
+use crate::{ToErrno, Result};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Protect {
@@ -104,7 +104,7 @@ impl mmap {
             self.offset,
         );
 
-        let addr = Errno::new_long(res)? as *mut u8;
+        let addr = res.to_errno()? as *mut u8;
 
         if let Some(file) = self.file {
             file.close()?;
@@ -139,7 +139,7 @@ pub struct mregion {
 
 impl mregion {
     pub fn close(self) -> Result<()> {
-        let _ = Errno::new(munmap(self.addr, self.len))?;
+        munmap(self.addr, self.len).to_errno()?;
 
         Ok(())
     }

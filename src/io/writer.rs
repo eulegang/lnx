@@ -1,4 +1,4 @@
-use crate::{Errno, Result, syscall::write};
+use crate::{Errno, ToErrno, Result, syscall::write};
 use super::{fd, wfd};
 
 pub trait Writer {
@@ -7,7 +7,7 @@ pub trait Writer {
 
 impl Writer for fd {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        let bytes = Errno::new(write(self.fd, buf))?;
+        let bytes = write(self.fd, buf).to_errno()?;
         Ok(bytes as usize)
     }
 }
