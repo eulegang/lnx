@@ -16,6 +16,16 @@ impl Errno {
             Ok(result as u32)
         }
     }
+
+    pub(crate) fn new_long(result: i64) -> Result<u64, Errno> {
+        if result < 0 {
+            let err = unsafe { NonZeroU32::new_unchecked((-result) as u32) };
+
+            Err(Errno { err })
+        } else {
+            Ok(result as u64)
+        }
+    }
 }
 
 impl Display for Errno {

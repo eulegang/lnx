@@ -1,3 +1,4 @@
+//#![cfg_attr(not(test), no_std)]
 #![no_std]
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
@@ -44,6 +45,7 @@ pub mod io;
 pub mod fs;
 pub mod proc;
 pub mod start;
+pub mod mmap;
 mod err;
 
 pub (crate) mod syscall;

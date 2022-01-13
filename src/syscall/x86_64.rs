@@ -54,7 +54,7 @@ pub(crate) fn read(fd: i32, bytes: &mut [u8]) -> i32 {
 
 pub(crate) fn open(path: *const u8, flags: u32, perms: u32) -> i32 {
     let ret: i32;
-    
+
     unsafe {
         asm!(
             "syscall",
@@ -191,6 +191,53 @@ pub(crate) fn vfork() -> i32 {
             "syscall",
 
             in("rax") 58,
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+pub(crate) fn mmap(
+    addr: *mut u8,
+    len: usize,
+    prot: usize,
+    flags: usize,
+    fd: usize,
+    off: usize,
+) -> i64 {
+    let ret: i64;
+
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 9,
+            in("rdi") addr,
+            in("rsi") len,
+            in("rdx") prot,
+            in("r10") flags,
+            in("r8") fd,
+            in("r9") off,
+
+            lateout("eax") ret,
+        );
+    }
+
+    ret
+}
+
+pub(crate) fn munmap(addr: *const u8, len: usize) -> i32 {
+    let ret: i32;
+
+    unsafe {
+        asm!(
+            "syscall",
+
+            in("rax") 11,
+            in("rdi") addr,
+            in("rsi") len,
+
             lateout("eax") ret,
         );
     }

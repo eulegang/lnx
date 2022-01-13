@@ -12,13 +12,13 @@ pub use pipe::Pipe;
 
 #[derive(Debug, PartialEq)]
 pub struct fd {
-    fd: i32,
+    pub(crate) fd: i32,
 }
 
 #[derive(Debug, PartialEq)]
-pub struct rfd(fd);
+pub struct rfd(pub(crate) fd);
 #[derive(Debug, PartialEq)]
-pub struct wfd(fd);
+pub struct wfd(pub(crate) fd);
 
 impl fd {
     pub fn stdin() -> rfd {
