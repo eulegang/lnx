@@ -1,5 +1,4 @@
-//#![cfg_attr(not(test), no_std)]
-#![no_std]
+#![cfg_attr(not(test), no_std)]
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
 
@@ -11,7 +10,7 @@ macro_rules! setup_main {
         unsafe fn _start() {
             core::arch::asm!("mov rdi, rsp", "call main", options(noreturn));
         }
-    }
+    };
 }
 
 macro_rules! flag_impl {
@@ -38,21 +37,21 @@ macro_rules! flag_impl {
                 <$ty>::new(!self.flags)
             }
         }
-    }
+    };
 }
 
-pub mod io;
+mod err;
 pub mod fs;
+pub mod io;
+pub mod mmap;
 pub mod proc;
 pub mod start;
-pub mod mmap;
-mod err;
 
-#[cfg(feature = "inet")]
-pub mod inet;
+#[cfg(feature = "socket")]
+pub mod socket;
 
-pub (crate) mod syscall;
-pub (crate) mod konst;
+pub(crate) mod konst;
+pub(crate) mod syscall;
 
 pub use err::Errno;
 pub(crate) use err::ToErrno;
@@ -62,5 +61,5 @@ pub type Result<T> = core::result::Result<T, Errno>;
 pub mod prelude {
     pub use crate::Result;
 
-    pub use crate::io::{Writer, Reader, fd, Close};
+    pub use crate::io::{fd, Close, Reader, Writer};
 }

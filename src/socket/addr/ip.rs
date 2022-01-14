@@ -1,12 +1,11 @@
-use core::str::FromStr;
+use super::socket_addr;
 use core::fmt::{self, Display, Formatter};
+use core::str::FromStr;
 
-const AF_INET: u16 = 2;
-const AF_INET6: u16 = 10;
+pub(crate) const AF_INET: u16 = 2;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct in4_addr([u8; 4]);
-pub struct in6_addr([u8; 16]);
 
 #[repr(C)]
 pub struct IPv4 {
@@ -17,13 +16,9 @@ pub struct IPv4 {
     _zero: [u8; 8],
 }
 
-#[repr(C)]
-pub struct IPv6 {
-    family: u16,
-    port: u16,
-    flowinfo: u32,
-    addr: in6_addr,
-    scope: u32,
+impl socket_addr for IPv4 {
+    const FAMILY: u16 = 2;
+    const SIZE: usize = core::mem::size_of::<IPv4>();
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -44,7 +39,7 @@ impl FromStr for in4_addr {
             match ch {
                 '.' => {
                     if char_proc == 0 {
-                        return Err(InvalidAddress("empty octet"))
+                        return Err(InvalidAddress("empty octet"));
                     }
 
                     addr[idx] = octet;
@@ -86,7 +81,11 @@ impl FromStr for in4_addr {
 
 impl Display for in4_addr {
     fn fmt(&self, fmt: &mut Formatter) -> fmt::Result {
-        write!(fmt, "{}.{}.{}.{}", self.0[0], self.0[1], self.0[2], self.0[3])
+        write!(
+            fmt,
+            "{}.{}.{}.{}",
+            self.0[0], self.0[1], self.0[2], self.0[3]
+        )
     }
 }
 
@@ -96,26 +95,50 @@ impl core::fmt::Display for InvalidAddress {
     }
 }
 
+impl From<[u8; 4]> for in4_addr {
+    fn from(addr: [u8; 4]) -> in4_addr {
+        in4_addr(addr)
+    }
+}
+
 impl From<(in4_addr, u16)> for IPv4 {
     fn from((addr, port): (in4_addr, u16)) -> IPv4 {
         let family = AF_INET;
         let _zero = [0u8; 8];
 
         let port = port.to_be_bytes();
-        
-        IPv4 { family, port, addr, _zero }
+
+        IPv4 {
+            family,
+            port,
+            addr,
+            _zero,
+        }
     }
 }
-
 
 #[test]
 fn parse_v4() {
     assert_eq!("127.0.0.1".parse(), Ok(in4_addr([127, 0, 0, 1])));
-    assert_eq!("255.255.255.255".parse(), Ok(in4_addr([255, 255, 255, 255])));
+    assert_eq!(
+        "255.255.255.255".parse(),
+        Ok(in4_addr([255, 255, 255, 255]))
+    );
 
-    assert_eq!("521.0.0.1".parse::<in4_addr>(), Err(InvalidAddress("overflown octet")));
-    assert_eq!("127.0.0".parse::<in4_addr>(), Err(InvalidAddress("underflow of octets")));
-    assert_eq!("127.0.0.1.0".parse::<in4_addr>(), Err(InvalidAddress("overflow of octets")));
-    assert_eq!("...".parse::<in4_addr>(), Err(InvalidAddress("empty octet")));
+    assert_eq!(
+        "521.0.0.1".parse::<in4_addr>(),
+        Err(InvalidAddress("overflown octet"))
+    );
+    assert_eq!(
+        "127.0.0".parse::<in4_addr>(),
+        Err(InvalidAddress("underflow of octets"))
+    );
+    assert_eq!(
+        "127.0.0.1.0".parse::<in4_addr>(),
+        Err(InvalidAddress("overflow of octets"))
+    );
+    assert_eq!(
+        "...".parse::<in4_addr>(),
+        Err(InvalidAddress("empty octet"))
+    );
 }
-
