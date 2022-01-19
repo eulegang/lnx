@@ -10,6 +10,7 @@ pub(crate) fn pipe2(fds: &mut [i32; 2], flags: u32) -> i32 {
             in("rdi") fds,
             in("esi") flags,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -25,6 +26,7 @@ pub(crate) fn close(fd: i32) -> i32 {
             in("rax") 3,
             in("edi") fd,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -46,6 +48,7 @@ pub(crate) fn read(fd: i32, bytes: &mut [u8]) -> i32 {
             in("rdx") len,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -65,6 +68,7 @@ pub(crate) fn open(path: *const u8, flags: u32, perms: u32) -> i32 {
             in("rdx") perms,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -86,6 +90,7 @@ pub(crate) fn write(fd: i32, bytes: &[u8]) -> i32 {
             in("rdx") len,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -102,6 +107,7 @@ pub(crate) fn dup(fd: i32) -> i32 {
             in("edi") fd,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -119,6 +125,7 @@ pub(crate) fn dup2(from: i32, to: i32) -> i32 {
             in("esi") to,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -135,6 +142,7 @@ pub(crate) fn unlink(path: *const u8) -> i32 {
             in("rdi") path,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -150,6 +158,7 @@ pub(crate) fn exit(code: i32) -> i32 {
             in("rax") 60,
             in("edi") code,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -164,6 +173,7 @@ pub(crate) fn getpid() -> i32 {
 
             in("rax") 30,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -178,6 +188,7 @@ pub(crate) fn fork() -> i32 {
 
             in("rax") 57,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -192,6 +203,7 @@ pub(crate) fn vfork() -> i32 {
 
             in("rax") 58,
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -221,6 +233,7 @@ pub(crate) fn mmap(
             in("r9") off,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -239,6 +252,7 @@ pub(crate) fn munmap(addr: *const u8, len: usize) -> i32 {
             in("rsi") len,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -258,6 +272,7 @@ pub(crate) fn lseek(fd: i32, offset: usize, origin: u32) -> isize {
             in("rdx") origin,
 
             lateout("rax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -277,6 +292,7 @@ pub(crate) fn socket(family: u32, ty: u32, prot: u32) -> i32 {
             in("edx") prot,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -296,6 +312,7 @@ pub(crate) fn bind(fd: i32, addr: *const (), len: usize) -> i32 {
             in("edx") len,
 
             lateout("eax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -314,6 +331,7 @@ pub(crate) fn listen(fd: i32, backlog: u32) -> i32 {
             in("esi") backlog,
 
             lateout("rax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -333,6 +351,7 @@ pub(crate) fn accept(fd: i32, addr: *mut (), len: *mut usize) -> i32 {
             in("rdx") len,
 
             lateout("rax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
@@ -352,6 +371,7 @@ pub(crate) fn connect(fd: i32, addr: *const (), len: usize) -> i32 {
             in("rdx") len,
 
             lateout("rax") ret,
+            clobber_abi("sysv64"),
         );
     }
 
