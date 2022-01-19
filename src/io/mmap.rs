@@ -1,7 +1,6 @@
-use crate::mmap::{mregion, mmap, Protect};
+use super::{fd, rfd, Seek};
+use crate::mmap::{mmap, mregion, Protect};
 use crate::Result;
-use super::{rfd, fd, Seek};
-
 
 pub trait MMap {
     fn mmap(self) -> Result<mregion>;
@@ -14,7 +13,6 @@ impl MMap for fd {
             .protect(Protect::READ)
             .file(self)
             .map()
-
     }
 }
 

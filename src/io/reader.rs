@@ -1,5 +1,5 @@
-use crate::{ToErrno, Result, syscall::read};
 use super::{fd, rfd};
+use crate::{syscall::read, Result, ToErrno};
 
 pub trait Reader {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize>;
@@ -17,4 +17,3 @@ impl Reader for rfd {
         self.0.read(buf)
     }
 }
-

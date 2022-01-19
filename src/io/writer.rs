@@ -1,5 +1,5 @@
-use crate::{Errno, ToErrno, Result, syscall::write};
 use super::{fd, wfd};
+use crate::{syscall::write, Errno, Result, ToErrno};
 
 pub trait Writer {
     fn write(&mut self, buf: &[u8]) -> Result<usize>;

@@ -1,4 +1,3 @@
-
 pub const O_APPEND: u32 = 0x400;
 pub const O_TRUNC: u32 = 0x200;
 pub const O_ASYNC: u32 = 0x2000;

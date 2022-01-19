@@ -1,9 +1,8 @@
 use crate::{
-    ToErrno, 
-    Result,
-    syscall::open,
     io::{fd, rfd, wfd},
     konst::*,
+    syscall::open,
+    Result, ToErrno,
 };
 
 pub struct Rd {

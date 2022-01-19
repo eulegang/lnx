@@ -1,5 +1,5 @@
-use crate::{Result, ToErrno, syscall::lseek};
-use super::{rfd, wfd, fd};
+use super::{fd, rfd, wfd};
+use crate::{syscall::lseek, Result, ToErrno};
 
 const SEEK_SET: u32 = 0;
 const SEEK_CUR: u32 = 1;
@@ -54,8 +54,8 @@ impl Seek for wfd {
 
 #[test]
 fn seek_reset() {
-    use crate::prelude::*;
     use crate::fs::Rd;
+    use crate::prelude::*;
 
     let mut buf = [0u8; 12];
     let mut fd = Rd::default().open(b"Cargo.toml\0").unwrap();

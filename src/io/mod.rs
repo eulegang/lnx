@@ -1,17 +1,18 @@
+mod close;
+mod convert;
+mod dup;
+mod mmap;
 mod pipe;
 mod reader;
-mod writer;
-mod close;
 mod seek;
-mod dup;
-mod convert;
-mod mmap;
+mod writer;
 
-pub use reader::Reader;
-pub use writer::Writer;
 pub use close::Close;
+pub use mmap::MMap;
 pub use pipe::Pipe;
+pub use reader::Reader;
 pub use seek::Seek;
+pub use writer::Writer;
 
 #[derive(Debug, PartialEq)]
 pub struct fd {
@@ -40,4 +41,3 @@ impl fd {
         fd { fd }
     }
 }
-

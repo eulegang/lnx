@@ -1,6 +1,6 @@
 mod ip;
 
-pub use ip::{IPv4, in4_addr};
+pub use ip::{in4_addr, IPv4};
 
 /// NEVER dyn this trait
 pub trait socket_addr {

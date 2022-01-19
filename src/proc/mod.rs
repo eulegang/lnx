@@ -1,12 +1,6 @@
 use crate::{
-    Result,
-    ToErrno,
-    syscall::{
-        exit as sys_exit,
-        fork as sys_fork,
-        vfork as sys_vfork,
-        getpid,
-    },
+    syscall::{exit as sys_exit, fork as sys_fork, getpid, vfork as sys_vfork},
+    Result, ToErrno,
 };
 use core::num::NonZeroU32;
 
@@ -17,7 +11,7 @@ pub struct pid {
 
 pub enum Fork {
     Parent(pid),
-    Child
+    Child,
 }
 
 pub struct Proc;

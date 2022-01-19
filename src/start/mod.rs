@@ -5,14 +5,19 @@ pub struct Start {
     addr: *const usize,
 }
 
-impl Start  {
+impl Start {
     pub fn args(&self) -> Args {
         let addr = self.addr;
         let offset = 0;
         let len = unsafe { self.addr.read() };
         let _life = PhantomData;
 
-        Args { _life, addr, offset, len }
+        Args {
+            _life,
+            addr,
+            offset,
+            len,
+        }
     }
 }
 

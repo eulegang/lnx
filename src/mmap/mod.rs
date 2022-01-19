@@ -1,6 +1,6 @@
 use crate::io::{fd, Close};
 use crate::syscall::{mmap, munmap};
-use crate::{ToErrno, Result};
+use crate::{Result, ToErrno};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Protect {
@@ -202,4 +202,3 @@ fn map_manifest() {
 
     assert_eq!(&region[0..12], b"[package]\nna");
 }
-

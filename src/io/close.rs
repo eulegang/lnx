@@ -1,5 +1,5 @@
-use crate::{ToErrno, Result, syscall::close};
-use super::{fd, wfd, rfd};
+use super::{fd, rfd, wfd};
+use crate::{syscall::close, Result, ToErrno};
 
 pub trait Close {
     fn close(self) -> Result<()>;

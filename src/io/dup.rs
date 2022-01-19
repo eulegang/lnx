@@ -1,5 +1,8 @@
-use crate::{ToErrno, Result, syscall::{dup, dup2}};
-use super::{fd, wfd, rfd};
+use super::{fd, rfd, wfd};
+use crate::{
+    syscall::{dup, dup2},
+    Result, ToErrno,
+};
 
 pub trait Dup: Sized {
     fn dup(&self) -> Result<Self>;

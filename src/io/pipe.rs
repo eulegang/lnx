@@ -1,6 +1,5 @@
-use crate::{ToErrno, syscall::pipe2, konst::*, Result};
-use super::{fd, wfd, rfd};
-
+use super::{fd, rfd, wfd};
+use crate::{konst::*, syscall::pipe2, Result, ToErrno};
 
 impl fd {
     pub fn pipe() -> Result<(rfd, wfd)> {
@@ -14,7 +13,7 @@ impl fd {
 }
 
 pub struct Pipe {
-    flags: u32
+    flags: u32,
 }
 
 impl Pipe {

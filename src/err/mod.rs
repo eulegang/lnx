@@ -1,5 +1,5 @@
-use core::num::NonZeroU32;
 use core::fmt::{self, Display, Formatter};
+use core::num::NonZeroU32;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Errno {
@@ -62,7 +62,6 @@ impl Display for Errno {
         } else {
             write!(fmt, "{}", &ERRNO_STR[idx])
         }
-
     }
 }
 
@@ -204,138 +203,406 @@ const ERRNO_STR: &[&str] = &[
 ];
 
 impl Errno {
-    pub const EPERM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(1) } };
-    pub const ENOENT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(2) } };
-    pub const ESRCH: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(3) } };
-    pub const EINTR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(4) } };
-    pub const EIO: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(5) } };
-    pub const ENXIO: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(6) } };
-    pub const E2BIG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(7) } };
-    pub const ENOEXEC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(8) } };
-    pub const EBADF: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(9) } };
-    pub const ECHILD: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(10) } };
-    pub const EAGAIN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(11) } };
-    pub const ENOMEM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(12) } };
-    pub const EACCES: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(13) } };
-    pub const EFAULT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(14) } };
-    pub const ENOTBLK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(15) } };
-    pub const EBUSY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(16) } };
-    pub const EEXIST: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(17) } };
-    pub const EXDEV: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(18) } };
-    pub const ENODEV: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(19) } };
-    pub const ENOTDIR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(20) } };
-    pub const EISDIR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(21) } };
-    pub const EINVAL: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(22) } };
-    pub const ENFILE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(23) } };
-    pub const EMFILE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(24) } };
-    pub const ENOTTY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(25) } };
-    pub const ETXTBSY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(26) } };
-    pub const EFBIG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(27) } };
-    pub const ENOSPC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(28) } };
-    pub const ESPIPE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(29) } };
-    pub const EROFS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(30) } };
-    pub const EMLINK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(31) } };
-    pub const EPIPE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(32) } };
-    pub const EDOM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(33) } };
-    pub const ERANGE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(34) } };
-    pub const EDEADLK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(35) } };
-    pub const ENAMETOOLONG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(36) } };
-    pub const ENOLCK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(37) } };
-    pub const ENOSYS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(38) } };
-    pub const ENOTEMPTY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(39) } };
-    pub const ELOOP: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(40) } };
-    pub const EWOULDBLOCK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(11) } };
-    pub const ENOMSG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(42) } };
-    pub const EIDRM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(43) } };
-    pub const ECHRNG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(44) } };
-    pub const EL2NSYNC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(45) } };
-    pub const EL3HLT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(46) } };
-    pub const EL3RST: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(47) } };
-    pub const ELNRNG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(48) } };
-    pub const EUNATCH: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(49) } };
-    pub const ENOCSI: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(50) } };
-    pub const EL2HLT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(51) } };
-    pub const EBADE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(52) } };
-    pub const EBADR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(53) } };
-    pub const EXFULL: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(54) } };
-    pub const ENOANO: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(55) } };
-    pub const EBADRQC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(56) } };
-    pub const EBADSLT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(57) } };
-    pub const EDEADLOCK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(35) } };
-    pub const EBFONT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(59) } };
-    pub const ENOSTR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(60) } };
-    pub const ENODATA: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(61) } };
-    pub const ETIME: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(62) } };
-    pub const ENOSR: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(63) } };
-    pub const ENONET: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(64) } };
-    pub const ENOPKG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(65) } };
-    pub const EREMOTE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(66) } };
-    pub const ENOLINK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(67) } };
-    pub const EADV: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(68) } };
-    pub const ESRMNT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(69) } };
-    pub const ECOMM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(70) } };
-    pub const EPROTO: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(71) } };
-    pub const EMULTIHOP: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(72) } };
-    pub const EDOTDOT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(73) } };
-    pub const EBADMSG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(74) } };
-    pub const EOVERFLOW: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(75) } };
-    pub const ENOTUNIQ: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(76) } };
-    pub const EBADFD: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(77) } };
-    pub const EREMCHG: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(78) } };
-    pub const ELIBACC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(79) } };
-    pub const ELIBBAD: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(80) } };
-    pub const ELIBSCN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(81) } };
-    pub const ELIBMAX: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(82) } };
-    pub const ELIBEXEC: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(83) } };
-    pub const EILSEQ: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(84) } };
-    pub const ERESTART: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(85) } };
-    pub const ESTRPIPE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(86) } };
-    pub const EUSERS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(87) } };
-    pub const ENOTSOCK: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(88) } };
-    pub const EDESTADDRREQ: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(89) } };
-    pub const EMSGSIZE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(90) } };
-    pub const EPROTOTYPE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(91) } };
-    pub const ENOPROTOOPT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(92) } };
-    pub const EPROTONOSUPPORT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(93) } };
-    pub const ESOCKTNOSUPPORT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(94) } };
-    pub const EOPNOTSUPP: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(95) } };
-    pub const EPFNOSUPPORT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(96) } };
-    pub const EAFNOSUPPORT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(97) } };
-    pub const EADDRINUSE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(98) } };
-    pub const EADDRNOTAVAIL: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(99) } };
-    pub const ENETDOWN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(100) } };
-    pub const ENETUNREACH: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(101) } };
-    pub const ENETRESET: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(102) } };
-    pub const ECONNABORTED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(103) } };
-    pub const ECONNRESET: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(104) } };
-    pub const ENOBUFS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(105) } };
-    pub const EISCONN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(106) } };
-    pub const ENOTCONN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(107) } };
-    pub const ESHUTDOWN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(108) } };
-    pub const ETOOMANYREFS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(109) } };
-    pub const ETIMEDOUT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(110) } };
-    pub const ECONNREFUSED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(111) } };
-    pub const EHOSTDOWN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(112) } };
-    pub const EHOSTUNREACH: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(113) } };
-    pub const EALREADY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(114) } };
-    pub const EINPROGRESS: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(115) } };
-    pub const ESTALE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(116) } };
-    pub const EUCLEAN: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(117) } };
-    pub const ENOTNAM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(118) } };
-    pub const ENAVAIL: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(119) } };
-    pub const EISNAM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(120) } };
-    pub const EREMOTEIO: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(121) } };
-    pub const EDQUOT: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(122) } };
-    pub const ENOMEDIUM: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(123) } };
-    pub const EMEDIUMTYPE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(124) } };
-    pub const ECANCELED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(125) } };
-    pub const ENOKEY: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(126) } };
-    pub const EKEYEXPIRED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(127) } };
-    pub const EKEYREVOKED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(128) } };
-    pub const EKEYREJECTED: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(129) } };
-    pub const EOWNERDEAD: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(130) } };
-    pub const ENOTRECOVERABLE: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(131) } };
-    pub const ERFKILL: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(132) } };
-    pub const EHWPOISON: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(133) } };
-    pub const ENOTSUP: Errno = Errno { err: unsafe { NonZeroU32::new_unchecked(95) } };
+    pub const EPERM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(1) },
+    };
+    pub const ENOENT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(2) },
+    };
+    pub const ESRCH: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(3) },
+    };
+    pub const EINTR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(4) },
+    };
+    pub const EIO: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(5) },
+    };
+    pub const ENXIO: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(6) },
+    };
+    pub const E2BIG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(7) },
+    };
+    pub const ENOEXEC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(8) },
+    };
+    pub const EBADF: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(9) },
+    };
+    pub const ECHILD: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(10) },
+    };
+    pub const EAGAIN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(11) },
+    };
+    pub const ENOMEM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(12) },
+    };
+    pub const EACCES: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(13) },
+    };
+    pub const EFAULT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(14) },
+    };
+    pub const ENOTBLK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(15) },
+    };
+    pub const EBUSY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(16) },
+    };
+    pub const EEXIST: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(17) },
+    };
+    pub const EXDEV: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(18) },
+    };
+    pub const ENODEV: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(19) },
+    };
+    pub const ENOTDIR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(20) },
+    };
+    pub const EISDIR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(21) },
+    };
+    pub const EINVAL: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(22) },
+    };
+    pub const ENFILE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(23) },
+    };
+    pub const EMFILE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(24) },
+    };
+    pub const ENOTTY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(25) },
+    };
+    pub const ETXTBSY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(26) },
+    };
+    pub const EFBIG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(27) },
+    };
+    pub const ENOSPC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(28) },
+    };
+    pub const ESPIPE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(29) },
+    };
+    pub const EROFS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(30) },
+    };
+    pub const EMLINK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(31) },
+    };
+    pub const EPIPE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(32) },
+    };
+    pub const EDOM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(33) },
+    };
+    pub const ERANGE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(34) },
+    };
+    pub const EDEADLK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(35) },
+    };
+    pub const ENAMETOOLONG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(36) },
+    };
+    pub const ENOLCK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(37) },
+    };
+    pub const ENOSYS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(38) },
+    };
+    pub const ENOTEMPTY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(39) },
+    };
+    pub const ELOOP: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(40) },
+    };
+    pub const EWOULDBLOCK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(11) },
+    };
+    pub const ENOMSG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(42) },
+    };
+    pub const EIDRM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(43) },
+    };
+    pub const ECHRNG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(44) },
+    };
+    pub const EL2NSYNC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(45) },
+    };
+    pub const EL3HLT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(46) },
+    };
+    pub const EL3RST: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(47) },
+    };
+    pub const ELNRNG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(48) },
+    };
+    pub const EUNATCH: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(49) },
+    };
+    pub const ENOCSI: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(50) },
+    };
+    pub const EL2HLT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(51) },
+    };
+    pub const EBADE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(52) },
+    };
+    pub const EBADR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(53) },
+    };
+    pub const EXFULL: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(54) },
+    };
+    pub const ENOANO: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(55) },
+    };
+    pub const EBADRQC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(56) },
+    };
+    pub const EBADSLT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(57) },
+    };
+    pub const EDEADLOCK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(35) },
+    };
+    pub const EBFONT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(59) },
+    };
+    pub const ENOSTR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(60) },
+    };
+    pub const ENODATA: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(61) },
+    };
+    pub const ETIME: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(62) },
+    };
+    pub const ENOSR: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(63) },
+    };
+    pub const ENONET: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(64) },
+    };
+    pub const ENOPKG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(65) },
+    };
+    pub const EREMOTE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(66) },
+    };
+    pub const ENOLINK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(67) },
+    };
+    pub const EADV: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(68) },
+    };
+    pub const ESRMNT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(69) },
+    };
+    pub const ECOMM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(70) },
+    };
+    pub const EPROTO: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(71) },
+    };
+    pub const EMULTIHOP: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(72) },
+    };
+    pub const EDOTDOT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(73) },
+    };
+    pub const EBADMSG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(74) },
+    };
+    pub const EOVERFLOW: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(75) },
+    };
+    pub const ENOTUNIQ: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(76) },
+    };
+    pub const EBADFD: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(77) },
+    };
+    pub const EREMCHG: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(78) },
+    };
+    pub const ELIBACC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(79) },
+    };
+    pub const ELIBBAD: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(80) },
+    };
+    pub const ELIBSCN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(81) },
+    };
+    pub const ELIBMAX: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(82) },
+    };
+    pub const ELIBEXEC: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(83) },
+    };
+    pub const EILSEQ: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(84) },
+    };
+    pub const ERESTART: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(85) },
+    };
+    pub const ESTRPIPE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(86) },
+    };
+    pub const EUSERS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(87) },
+    };
+    pub const ENOTSOCK: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(88) },
+    };
+    pub const EDESTADDRREQ: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(89) },
+    };
+    pub const EMSGSIZE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(90) },
+    };
+    pub const EPROTOTYPE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(91) },
+    };
+    pub const ENOPROTOOPT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(92) },
+    };
+    pub const EPROTONOSUPPORT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(93) },
+    };
+    pub const ESOCKTNOSUPPORT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(94) },
+    };
+    pub const EOPNOTSUPP: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(95) },
+    };
+    pub const EPFNOSUPPORT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(96) },
+    };
+    pub const EAFNOSUPPORT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(97) },
+    };
+    pub const EADDRINUSE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(98) },
+    };
+    pub const EADDRNOTAVAIL: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(99) },
+    };
+    pub const ENETDOWN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(100) },
+    };
+    pub const ENETUNREACH: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(101) },
+    };
+    pub const ENETRESET: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(102) },
+    };
+    pub const ECONNABORTED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(103) },
+    };
+    pub const ECONNRESET: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(104) },
+    };
+    pub const ENOBUFS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(105) },
+    };
+    pub const EISCONN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(106) },
+    };
+    pub const ENOTCONN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(107) },
+    };
+    pub const ESHUTDOWN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(108) },
+    };
+    pub const ETOOMANYREFS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(109) },
+    };
+    pub const ETIMEDOUT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(110) },
+    };
+    pub const ECONNREFUSED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(111) },
+    };
+    pub const EHOSTDOWN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(112) },
+    };
+    pub const EHOSTUNREACH: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(113) },
+    };
+    pub const EALREADY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(114) },
+    };
+    pub const EINPROGRESS: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(115) },
+    };
+    pub const ESTALE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(116) },
+    };
+    pub const EUCLEAN: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(117) },
+    };
+    pub const ENOTNAM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(118) },
+    };
+    pub const ENAVAIL: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(119) },
+    };
+    pub const EISNAM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(120) },
+    };
+    pub const EREMOTEIO: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(121) },
+    };
+    pub const EDQUOT: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(122) },
+    };
+    pub const ENOMEDIUM: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(123) },
+    };
+    pub const EMEDIUMTYPE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(124) },
+    };
+    pub const ECANCELED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(125) },
+    };
+    pub const ENOKEY: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(126) },
+    };
+    pub const EKEYEXPIRED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(127) },
+    };
+    pub const EKEYREVOKED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(128) },
+    };
+    pub const EKEYREJECTED: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(129) },
+    };
+    pub const EOWNERDEAD: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(130) },
+    };
+    pub const ENOTRECOVERABLE: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(131) },
+    };
+    pub const ERFKILL: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(132) },
+    };
+    pub const EHWPOISON: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(133) },
+    };
+    pub const ENOTSUP: Errno = Errno {
+        err: unsafe { NonZeroU32::new_unchecked(95) },
+    };
 }
