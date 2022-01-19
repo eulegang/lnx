@@ -87,13 +87,11 @@ fn test_socket() {
     let listen_socket: listen<IPv4> =
         listen::listening((addr, 12345).into(), SocketType::Stream).unwrap();
 
-    std::thread::spawn(|| {
-        let addr: in4_addr = [127, 0, 0, 1].into();
+    let addr: in4_addr = [127, 0, 0, 1].into();
 
-        let mut write = socket::connect::<IPv4>((addr, 12345).into(), SocketType::Stream).unwrap();
+    let mut write = socket::connect::<IPv4>((addr, 12345).into(), SocketType::Stream).unwrap();
 
-        write.write(b"hello world!").unwrap();
-    });
+    write.write(b"hello world!").unwrap();
 
     let mut read = listen_socket.accept(None).unwrap();
 
