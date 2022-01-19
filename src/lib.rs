@@ -1,4 +1,5 @@
-#![cfg_attr(not(test), no_std)]
+//#![cfg_attr(not(test), no_std)]
+#![no_std]
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
 
