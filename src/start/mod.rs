@@ -23,9 +23,22 @@ pub struct Args<'a> {
     len: usize,
 }
 
-impl Args<'_> {
-    pub fn len(&self) -> usize{
+impl<'a> Args<'a> {
+    pub fn get(&self, idx: usize) -> Option<&'a [u8]> {
+        if idx >= self.len {
+            return None;
+        }
+
+        Some(self.get_unchecked(idx))
+    }
+
+    pub fn len(&self) -> usize {
         self.len
+    }
+
+    fn get_unchecked(&self, idx: usize) -> &'a [u8] {
+        let ptr = unsafe { self.addr.add(idx + 1).read() as *const u8 };
+        slice_from_cstr(ptr)
     }
 }
 
@@ -33,13 +46,13 @@ impl<'a> Iterator for Args<'a> {
     type Item = &'a [u8];
 
     fn next(&mut self) -> Option<&'a [u8]> {
+        let cur = self.offset;
         self.offset += 1;
 
         if self.offset > self.len {
             None
         } else {
-            let ptr = unsafe { self.addr.add(self.offset).read() as *const u8 };
-            Some(slice_from_cstr(ptr))
+            Some(self.get_unchecked(cur))
         }
     }
 }
