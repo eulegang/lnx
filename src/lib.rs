@@ -14,6 +14,14 @@ macro_rules! setup_main {
     };
 }
 
+#[macro_export]
+macro_rules! die {
+    ($msg: literal, $($args: expr),*) => {{
+        let _ = write!(::lnx::io::fd::stderr(), $msg, $($args),*);
+        ::lnx::proc::Proc::exit(1);
+    }}
+}
+
 macro_rules! flag_impl {
     ($ty: ty) => {
         impl core::ops::BitOr for $ty {
