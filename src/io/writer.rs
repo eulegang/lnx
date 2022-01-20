@@ -7,7 +7,7 @@ pub trait Writer {
 
 impl Writer for fd {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        let bytes = write(self.fd, buf).to_errno()?;
+        let bytes = write(self.fd, buf.as_ptr(), buf.len()).to_errno()?;
         Ok(bytes as usize)
     }
 }

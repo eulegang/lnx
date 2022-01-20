@@ -8,4 +8,7 @@ default = [ "socket" ]
 socket = []
 
 [dependencies]
+lnx-syscall = { path = "deps/lnx-syscall" }
 
+[workspace]
+members = [ "deps/*" ]

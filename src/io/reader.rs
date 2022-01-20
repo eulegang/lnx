@@ -7,7 +7,7 @@ pub trait Reader {
 
 impl Reader for fd {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        let bytes = read(self.fd, buf).to_errno()?;
+        let bytes = read(self.fd, buf.as_mut_ptr(), buf.len()).to_errno()?;
         Ok(bytes as usize)
     }
 }

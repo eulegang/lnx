@@ -19,7 +19,6 @@ pub struct Proc;
 impl Proc {
     pub fn exit(code: i32) -> ! {
         sys_exit(code);
-        unreachable!()
     }
 
     pub fn id() -> pid {
