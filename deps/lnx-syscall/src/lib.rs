@@ -1,23 +1,40 @@
 use proc_macro::TokenStream as TS;
-use proc_macro2::TokenStream;
-use quote::quote;
+
 use syn::{
     parse::{Parse, ParseStream},
-    parse_macro_input,
-    punctuated::Punctuated,
-    spanned::Spanned,
-    Ident, LitInt, Result, Token, Type,
+    parse_macro_input, LitInt, Result, Signature, Token, Type, Visibility,
 };
+
+mod arch;
+
+use arch::word_size;
 
 #[proc_macro]
 pub fn syscall(ts: TS) -> TS {
     let syscall = parse_macro_input!(ts as SysCall);
-    match generate(&syscall) {
+    match syscall.generate() {
         Ok(ts) => ts.into(),
         Err(ts) => ts.into_compile_error().into(),
     }
 }
 
+struct SysCall {
+    num: LitInt,
+    vis: Visibility,
+    sig: Signature,
+}
+
+impl Parse for SysCall {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let num = input.parse()?;
+        let _: Token![,] = input.parse()?;
+        let vis = input.parse()?;
+        let sig = input.parse()?;
+
+        Ok(SysCall { num, vis, sig })
+    }
+}
+/*
 struct SysCall {
     num: LitInt,
     name: Ident,
@@ -118,6 +135,7 @@ fn generate(syscall: &SysCall) -> Result<TokenStream> {
         }
     })
 }
+*/
 
 fn size_of_type(ty: &Type) -> usize {
     match ty {
@@ -145,14 +163,4 @@ fn size_of_type(ty: &Type) -> usize {
 
         _ => 0,
     }
-}
-
-#[cfg(target_pointer_width = "64")]
-fn word_size() -> usize {
-    8
-}
-
-#[cfg(target_pointer_width = "32")]
-fn word_size() -> usize {
-    4
 }
