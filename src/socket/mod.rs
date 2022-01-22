@@ -6,14 +6,12 @@ use crate::{
 use core::marker::PhantomData;
 
 mod addr;
+mod create;
+mod opt;
 
 pub use addr::*;
-
-#[repr(u32)]
-pub enum SocketType {
-    Stream = 1,
-    Datagram = 2,
-}
+pub use create::*;
+pub use opt::*;
 
 pub struct socket {
     fd: fd,
@@ -84,12 +82,28 @@ impl Writer for socket {
 #[test]
 fn test_socket() {
     let addr: in4_addr = [0, 0, 0, 0].into();
-    let listen_socket: listen<IPv4> =
-        listen::listening((addr, 12345).into(), SocketType::Stream).unwrap();
+    let listen_socket: listen<IPv4> = SocketType::Stream
+        .builder::<IPv4>()
+        .unwrap()
+        .set_opt::<ReuseAddr>(true)
+        .unwrap()
+        .listen((addr, 12345).into())
+        .unwrap();
+
+    //listen::listening((addr, 12345).into(), SocketType::Stream).unwrap();
+    //listen_socket.set_opt::<ReuseAddr>(true).unwrap();
+    //listen_socket.set_opt::<ReusePort>(true).unwrap();
+    let listen_socket = listen_socket;
 
     let addr: in4_addr = [127, 0, 0, 1].into();
 
-    let mut write = socket::connect::<IPv4>((addr, 12345).into(), SocketType::Stream).unwrap();
+    let mut write = SocketType::Stream
+        .builder::<IPv4>()
+        .unwrap()
+        .connect((addr, 12345).into())
+        .unwrap();
+
+    //socket::connect::<IPv4>((addr, 12345).into(), SocketType::Stream).unwrap();
 
     write.write(b"hello world!").unwrap();
 

@@ -37,4 +37,7 @@ mod socket {
     syscall!(43, pub(crate) fn accept(fd: i32, addr: *mut(), len: *mut usize) -> i32);
     syscall!(49, pub(crate) fn bind(fd: i32, addr: *const(), len: usize) -> i32);
     syscall!(50, pub(crate) fn listen(fd: i32, backlog: u32) -> i32);
+
+    syscall!(54, pub(crate) fn setsockopt(fd: i32, level: u32, optname: u32, optval: *const u8, len: usize) -> i32);
+    syscall!(55, pub(crate) fn getsockopt(fd: i32, level: u32, optname: u32, optval: *mut u8, len: *mut usize) -> i32);
 }
