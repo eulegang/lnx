@@ -1,4 +1,4 @@
-use crate::syscall::{accept, bind, connect, listen, socket};
+use crate::syscall::{accept, listen, socket};
 use crate::{
     io::{fd, Reader, Writer},
     Result, ToErrno,
@@ -11,25 +11,9 @@ mod opt;
 
 pub use addr::*;
 pub use create::*;
-pub use opt::*;
 
 pub struct socket {
     fd: fd,
-}
-
-impl socket {
-    pub fn connect<Addr>(addr: Addr, ty: SocketType) -> Result<socket>
-    where
-        Addr: addr::socket_addr,
-    {
-        let sock = socket(Addr::FAMILY as u32, ty as u32, 0);
-        let fd = sock.to_errno()? as i32;
-        let fd = fd { fd };
-
-        connect(fd.fd, (&addr as *const Addr).cast(), Addr::SIZE).to_errno()?;
-
-        Ok(socket { fd })
-    }
 }
 
 pub struct listen<Addr: addr::socket_addr> {
@@ -38,21 +22,6 @@ pub struct listen<Addr: addr::socket_addr> {
 }
 
 impl<Addr: addr::socket_addr> listen<Addr> {
-    pub fn listening(addr: Addr, ty: SocketType) -> Result<listen<Addr>>
-    where
-        Addr: addr::socket_addr,
-    {
-        let sock = socket(Addr::FAMILY as u32, ty as u32, 0);
-        let fd = sock.to_errno()? as i32;
-        let fd = fd { fd };
-
-        bind(fd.fd, (&addr as *const Addr).cast(), Addr::SIZE).to_errno()?;
-        listen(fd.fd, 10).to_errno()?;
-
-        let _address = PhantomData;
-        Ok(listen { fd, _address })
-    }
-
     pub fn accept(&self, addr: Option<&mut Addr>) -> Result<socket> {
         let addr = match addr {
             Some(addr) => (addr as *mut Addr).cast(),
@@ -82,28 +51,21 @@ impl Writer for socket {
 #[test]
 fn test_socket() {
     let addr: in4_addr = [0, 0, 0, 0].into();
-    let listen_socket: listen<IPv4> = SocketType::Stream
-        .builder::<IPv4>()
+    let listen_socket: listen<IPv4> = builder::<IPv4, { SocketType::Stream }>::new()
         .unwrap()
-        .set_opt::<ReuseAddr>(true)
+        .reuse_addr(true)
         .unwrap()
         .listen((addr, 12345).into())
         .unwrap();
 
-    //listen::listening((addr, 12345).into(), SocketType::Stream).unwrap();
-    //listen_socket.set_opt::<ReuseAddr>(true).unwrap();
-    //listen_socket.set_opt::<ReusePort>(true).unwrap();
     let listen_socket = listen_socket;
 
     let addr: in4_addr = [127, 0, 0, 1].into();
 
-    let mut write = SocketType::Stream
-        .builder::<IPv4>()
+    let mut write = builder::<IPv4, { SocketType::Stream }>::new()
         .unwrap()
         .connect((addr, 12345).into())
         .unwrap();
-
-    //socket::connect::<IPv4>((addr, 12345).into(), SocketType::Stream).unwrap();
 
     write.write(b"hello world!").unwrap();
 

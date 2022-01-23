@@ -1,4 +1,4 @@
-use super::{builder, socket_addr};
+use super::{builder, socket_addr, SocketType};
 use crate::{
     syscall::{getsockopt, setsockopt},
     Result, ToErrno,
@@ -6,20 +6,30 @@ use crate::{
 
 const SOL_SOCKET: u32 = 1;
 
-pub trait SockOptValue: Sized {
+pub(crate) trait SockOptValue: Sized {
     const SIZE: usize;
 
     fn marshal(&self, buf: &mut [u8]);
     fn unmarshal(buf: &[u8]) -> Self;
 }
 
-pub trait SockOpt {
+pub(crate) trait SockOpt {
     const NAME: u32;
     type Val: SockOptValue;
 }
 
-pub struct ReuseAddr {}
-pub struct ReusePort {}
+pub(crate) struct ReuseAddr {}
+pub(crate) struct ReusePort {}
+pub(crate) struct Broadcast {}
+pub(crate) struct DontRoute {}
+pub(crate) struct KeepAlive {}
+pub(crate) struct Linger {
+    pub(crate) enabled: u32,
+    pub(crate) seconds: u32,
+}
+
+pub(crate) struct RcvBuf {}
+pub(crate) struct SndBuf {}
 
 impl SockOpt for ReuseAddr {
     const NAME: u32 = 2;
@@ -31,11 +41,41 @@ impl SockOpt for ReusePort {
     type Val = bool;
 }
 
+impl SockOpt for Broadcast {
+    const NAME: u32 = 6;
+    type Val = bool;
+}
+
+impl SockOpt for DontRoute {
+    const NAME: u32 = 5;
+    type Val = bool;
+}
+
+impl SockOpt for KeepAlive {
+    const NAME: u32 = 9;
+    type Val = bool;
+}
+
+impl SockOpt for Linger {
+    const NAME: u32 = 13;
+    type Val = Linger;
+}
+
+impl SockOpt for RcvBuf {
+    const NAME: u32 = 8;
+    type Val = u32;
+}
+
+impl SockOpt for SndBuf {
+    const NAME: u32 = 8;
+    type Val = u32;
+}
+
 impl SockOptValue for bool {
     const SIZE: usize = 4;
 
     fn marshal(&self, buf: &mut [u8]) {
-        (&mut buf[0..4]).copy_from_slice(&1u32.to_ne_bytes())
+        1u32.marshal(buf)
     }
 
     fn unmarshal(buf: &[u8]) -> Self {
@@ -43,8 +83,36 @@ impl SockOptValue for bool {
     }
 }
 
-impl<Addr: socket_addr> builder<Addr> {
-    pub fn set_opt<S: SockOpt>(self, val: S::Val) -> Result<builder<Addr>> {
+impl SockOptValue for u32 {
+    const SIZE: usize = 4;
+
+    fn marshal(&self, buf: &mut [u8]) {
+        (&mut buf[0..4]).copy_from_slice(&self.to_ne_bytes())
+    }
+
+    fn unmarshal(buf: &[u8]) -> u32 {
+        u32::from_ne_bytes([buf[0], buf[1], buf[2], buf[3]])
+    }
+}
+
+impl SockOptValue for Linger {
+    const SIZE: usize = 8;
+
+    fn marshal(&self, buf: &mut [u8]) {
+        self.enabled.marshal(buf);
+        self.seconds.marshal(&mut buf[4..]);
+    }
+
+    fn unmarshal(buf: &[u8]) -> Self {
+        let enabled = u32::unmarshal(buf);
+        let seconds = u32::unmarshal(&buf[4..]);
+
+        Linger { enabled, seconds }
+    }
+}
+
+impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
+    pub(crate) fn set_opt<S: SockOpt>(self, val: S::Val) -> Result<Self> {
         let mut buf = [0u8; 16];
         val.marshal(&mut buf);
 
@@ -60,7 +128,7 @@ impl<Addr: socket_addr> builder<Addr> {
         Ok(self)
     }
 
-    pub fn get_opt<S: SockOpt>(&self) -> Result<S::Val> {
+    pub(crate) fn get_opt<S: SockOpt>(&self) -> Result<S::Val> {
         let mut buf = [0u8; 16];
         let mut len = 0usize;
 

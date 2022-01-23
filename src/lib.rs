@@ -2,6 +2,8 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![allow(clippy::missing_safety_doc)] // not working properly
+#![allow(incomplete_features)]
+#![feature(adt_const_params)]
 
 #[macro_export]
 macro_rules! setup_main {
