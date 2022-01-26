@@ -109,7 +109,7 @@ flag_impl!(Wr);
 
 #[test]
 fn read_manifest() {
-    use crate::prelude::*;
+    use crate::io::Reader;
 
     let mut buf = [0u8; 12];
     let mut fd = Rd::default().open(b"Cargo.toml\0").unwrap();
@@ -127,7 +127,8 @@ fn missing() {
 
 #[test]
 fn write_null() {
-    use crate::prelude::*;
+    use crate::io::{Close, Writer};
+
     let mut wr = Wr::default().open(b"/dev/null\0").unwrap();
 
     assert_eq!(wr.write(b"hello world").unwrap(), 11);

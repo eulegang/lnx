@@ -55,7 +55,7 @@ impl Seek for wfd {
 #[test]
 fn seek_reset() {
     use crate::fs::Rd;
-    use crate::prelude::*;
+    use crate::io::Reader;
 
     let mut buf = [0u8; 12];
     let mut fd = Rd::default().open(b"Cargo.toml\0").unwrap();

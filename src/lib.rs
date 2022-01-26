@@ -5,6 +5,7 @@
 #![allow(incomplete_features)]
 #![feature(adt_const_params)]
 
+#[cfg(feature = "startup")]
 #[macro_export]
 macro_rules! setup_main {
     () => {
@@ -56,6 +57,8 @@ pub mod fs;
 pub mod io;
 pub mod mmap;
 pub mod proc;
+
+#[cfg(feature = "startup")]
 pub mod start;
 
 #[cfg(feature = "socket")]
@@ -68,9 +71,3 @@ pub use err::Errno;
 pub(crate) use err::ToErrno;
 
 pub type Result<T> = core::result::Result<T, Errno>;
-
-pub mod prelude {
-    pub use crate::Result;
-
-    pub use crate::io::{fd, Close, Reader, Writer};
-}

@@ -6,6 +6,7 @@ edition = "2021"
 [features]
 default = [ "socket" ]
 socket = []
+startup = []
 
 [dependencies]
 lnx-syscall = { path = "deps/lnx-syscall" }

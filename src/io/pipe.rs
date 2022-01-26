@@ -56,7 +56,7 @@ impl core::ops::Not for Pipe {
 
 #[test]
 fn test_pipe() {
-    use crate::prelude::*;
+    use crate::io::{Close, Reader, Writer};
 
     let (mut r, mut w) = fd::pipe().unwrap();
 
