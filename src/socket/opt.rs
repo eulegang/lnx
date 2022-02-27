@@ -111,7 +111,7 @@ impl SockOptValue for Linger {
     }
 }
 
-impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
+impl<Addr: socket_addr, TY: SocketType> builder<Addr, TY> {
     pub(crate) fn set_opt<S: SockOpt>(self, val: S::Val) -> Result<Self> {
         let mut buf = [0u8; 16];
         val.marshal(&mut buf);

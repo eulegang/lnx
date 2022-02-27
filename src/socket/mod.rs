@@ -51,7 +51,7 @@ impl Writer for socket {
 #[test]
 fn test_socket() {
     let addr: in4_addr = [0, 0, 0, 0].into();
-    let listen_socket: listen<IPv4> = builder::<IPv4, { SocketType::Stream }>::new()
+    let listen_socket: listen<IPv4> = builder::<IPv4, Stream>::new()
         .unwrap()
         .reuse_addr(true)
         .unwrap()
@@ -62,7 +62,7 @@ fn test_socket() {
 
     let addr: in4_addr = [127, 0, 0, 1].into();
 
-    let mut write = builder::<IPv4, { SocketType::Stream }>::new()
+    let mut write = builder::<IPv4, Stream>::new()
         .unwrap()
         .connect((addr, 12345).into())
         .unwrap();

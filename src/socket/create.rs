@@ -9,21 +9,29 @@ use crate::Result;
 use super::opt::{Broadcast, DontRoute, KeepAlive, Linger, RcvBuf, ReuseAddr, ReusePort, SndBuf};
 use super::{listen, socket};
 
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum SocketType {
-    Stream = 1,
-    Datagram = 2,
+pub trait SocketType {
+    const TYPE: u32;
 }
 
-pub struct builder<Addr: socket_addr, const TY: SocketType> {
+pub struct Stream;
+pub struct Datagram;
+
+impl SocketType for Stream {
+    const TYPE: u32 = 1;
+}
+
+impl SocketType for Datagram {
+    const TYPE: u32 = 2;
+}
+
+pub struct builder<Addr: socket_addr, TY: SocketType> {
     pub(crate) fd: fd,
-    _addr: PhantomData<Addr>,
+    _addr: PhantomData<(Addr, TY)>,
 }
 
-impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
+impl<Addr: socket_addr, TY: SocketType> builder<Addr, TY> {
     pub fn new() -> Result<Self> {
-        let sock = sys_socket(Addr::FAMILY as u32, TY as u32, 0);
+        let sock = sys_socket(Addr::FAMILY as u32, TY::TYPE as u32, 0);
         let fd = sock.to_errno()? as i32;
         let fd = fd { fd };
 
@@ -33,7 +41,7 @@ impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
     }
 }
 
-impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
+impl<Addr: socket_addr, TY: SocketType> builder<Addr, TY> {
     pub fn listen(self, addr: Addr) -> Result<listen<Addr>> {
         let fd = self.fd;
         bind(fd.fd, (&addr as *const Addr).cast(), Addr::SIZE).to_errno()?;
@@ -117,7 +125,7 @@ impl<Addr: socket_addr, const TY: SocketType> builder<Addr, TY> {
     }
 }
 
-impl<Addr: socket_addr> builder<Addr, { SocketType::Datagram }> {
+impl<Addr: socket_addr> builder<Addr, Stream> {
     pub fn keep_alive(self, flag: bool) -> Result<Self> {
         self.set_opt::<KeepAlive>(flag)
     }
@@ -127,7 +135,7 @@ impl<Addr: socket_addr> builder<Addr, { SocketType::Datagram }> {
     }
 }
 
-impl<Addr: socket_addr> builder<Addr, { SocketType::Datagram }> {
+impl<Addr: socket_addr> builder<Addr, Datagram> {
     pub fn boardcast(self, flag: bool) -> Result<Self> {
         self.set_opt::<Broadcast>(flag)
     }
