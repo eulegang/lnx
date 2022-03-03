@@ -10,6 +10,7 @@ startup = []
 
 [dependencies]
 lnx-syscall = { path = "deps/lnx-syscall" }
+lnx-flags = { path = "deps/lnx-flags" }
 
 [workspace]
 members = [ "deps/*" ]

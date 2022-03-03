@@ -5,6 +5,9 @@ use crate::{
     Result, ToErrno,
 };
 
+use lnx_flags::Flags;
+
+#[derive(Flags, Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Rd {
     flags: u32,
 }
@@ -20,10 +23,6 @@ impl Rd {
     pub const CLOEXEC: Rd = Rd { flags: O_CLOEXEC };
     pub const NONBLOCK: Rd = Rd { flags: O_NONBLOCK };
 
-    fn new(flags: u32) -> Rd {
-        Rd { flags }
-    }
-
     pub fn open(&self, path: &[u8]) -> Result<rfd> {
         let fd = open(path.as_ptr(), O_RDONLY | self.flags, 0o777).to_errno()? as i32;
 
@@ -31,6 +30,7 @@ impl Rd {
     }
 }
 
+#[derive(Flags, Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Wr {
     flags: u32,
 }
@@ -52,10 +52,6 @@ impl Wr {
     pub const NONBLOCK: Open = Open { flags: O_NONBLOCK };
     pub const SYNC: Open = Open { flags: O_SYNC };
 
-    pub fn new(flags: u32) -> Wr {
-        Wr { flags }
-    }
-
     pub fn open(&self, path: &[u8]) -> Result<wfd> {
         self.open_perms(path, 0o777)
     }
@@ -67,6 +63,7 @@ impl Wr {
     }
 }
 
+#[derive(Flags, Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Open {
     flags: u32,
 }
@@ -88,10 +85,6 @@ impl Open {
     pub const NONBLOCK: Open = Open { flags: O_NONBLOCK };
     pub const SYNC: Open = Open { flags: O_SYNC };
 
-    fn new(flags: u32) -> Open {
-        Open { flags }
-    }
-
     pub fn open(&self, path: &[u8]) -> Result<fd> {
         self.open_perms(path, 0o777)
     }
@@ -102,10 +95,6 @@ impl Open {
         Ok(fd::new(fd))
     }
 }
-
-flag_impl!(Open);
-flag_impl!(Rd);
-flag_impl!(Wr);
 
 #[test]
 fn read_manifest() {

@@ -1,17 +1,14 @@
 use crate::io::{fd, Close};
 use crate::syscall::{mmap, munmap};
 use crate::{Result, ToErrno};
+use lnx_flags::Flags;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Flags, Clone, Copy)]
 pub struct Protect {
     flags: usize,
 }
 
 impl Protect {
-    fn new(flags: usize) -> Protect {
-        Protect { flags }
-    }
-
     pub const NONE: Protect = Protect { flags: 0 };
     pub const READ: Protect = Protect { flags: 1 };
     pub const WRITE: Protect = Protect { flags: 2 };
@@ -24,18 +21,13 @@ impl Default for Protect {
     }
 }
 
-pub struct Map {
-    flags: usize,
-}
+#[derive(Debug, PartialEq, Eq, Flags, Clone, Copy)]
+pub struct Map(usize);
 
 impl Map {
-    fn new(flags: usize) -> Map {
-        Map { flags }
-    }
-
-    pub const SHARED: Map = Map { flags: 1 };
-    pub const PRIVATE: Map = Map { flags: 2 };
-    pub const ANONYMOUS: Map = Map { flags: 32 };
+    pub const SHARED: Map = Map(1);
+    pub const PRIVATE: Map = Map(2);
+    pub const ANONYMOUS: Map = Map(32);
 }
 
 pub struct mmap {
@@ -45,9 +37,6 @@ pub struct mmap {
     share: bool,
     file: Option<fd>,
 }
-
-flag_impl!(Map);
-flag_impl!(Protect);
 
 impl mmap {
     pub fn len(mut self, len: usize) -> Self {
@@ -87,12 +76,12 @@ impl mmap {
         let mut flags = 0;
 
         if fd == usize::MAX {
-            flags |= Map::ANONYMOUS.flags;
+            flags |= Map::ANONYMOUS.0;
         }
 
         match self.share {
-            false => flags |= Map::PRIVATE.flags,
-            true => flags |= Map::SHARED.flags,
+            false => flags |= Map::PRIVATE.0,
+            true => flags |= Map::SHARED.0,
         };
 
         let res = mmap(
