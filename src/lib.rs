@@ -4,18 +4,6 @@
 #![allow(clippy::missing_safety_doc)] // not working properly
 #![allow(incomplete_features)]
 
-#[cfg(feature = "startup")]
-#[macro_export]
-macro_rules! setup_main {
-    () => {
-        #[no_mangle]
-        #[naked]
-        unsafe fn _start() {
-            core::arch::asm!("mov rdi, rsp", "call main", options(noreturn));
-        }
-    };
-}
-
 #[macro_export]
 macro_rules! die {
     ($msg: literal, $($args: expr),*) => {{
@@ -29,9 +17,6 @@ pub mod fs;
 pub mod io;
 pub mod mmap;
 pub mod proc;
-
-#[cfg(feature = "startup")]
-pub mod start;
 
 #[cfg(feature = "socket")]
 pub mod socket;
